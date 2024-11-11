@@ -45,6 +45,78 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+
+@app.route('/people', methods=['GET'])
+def get_people():
+   all_people = People.query.all()
+   people = list(map(lambda x: x.to_dict(), all_people))
+   return jsonify(people), 200
+
+@app.route('/people/<int:id_people>', methods=['GET'])   
+def get_people_by_id(id_people):
+   id_people = People.query.filter_by(id=id_people)
+   people = list(map(lambda x: x.to_dict(), id_people))
+   return jsonify(people.to_dict()), 200
+
+@app.route('/planets', methods=['GET'])
+def get_planets():
+   all_planets = Planet.query.all()
+   planets = list(map(lambda x: x.to_dict(), all_planets))
+   return jsonify(planets), 200
+
+@app.route('/planets/<int:planet_id>', methods=['GET'])   
+def get_planets_by_id(planet_id):
+   planet_id = Planet.query.filter_by(id=planet_id)
+   planets = list(map(lambda x: x.to_dict(), planet_id))
+   return jsonify(planets.to_dict()), 200
+
+@app.route('/users', methods=['GET'])
+def get_users():    
+   all_users = User.query.all()
+   users = list(map(lambda x: x.to_dict(), all_users))
+   return jsonify(users), 200   
+
+@app.route('/users/<int:id>/favorites', methods=['GET'])
+def get_users_favorites():
+   all_favorites = Favorites.query.filter_by(id_user=id)
+   favorites = list(map(lambda x: x.to_dict(), all_favorites))
+   return jsonify(favorites), 200
+
+
+@app.route('/users/<int:id_user>/favorite/planet/<int:planet_id>', methods=['POST'])
+def add_favorite_planet(planet_id):
+   id_user = request.json.get("id_user")
+   favorite_planet = Favorites(id_user=id_user, planet_id=planet_id)
+   db.session.add(favorite_planet)
+   db.session.commit()
+   return jsonify(favorite_planet.to_dict()), 200
+
+@app.route('/users/<int:id_user>/favorite/people/<int:id_people>', methods=['POST'])
+def add_favorite_people(id_people):
+   id_user = request.json.get("id_user")
+   favorite_people = Favorites(id_user=id_user, id_people=id_people)
+   db.session.add(favorite_people)
+   db.session.commit()
+   return jsonify(favorite_people.to_dict()), 200
+
+
+@app.route('/users/<int:id_user>/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def delete_favorite_planet(planet_id):
+   id_user = request.json.get("id_user")
+   favorite_planet = Favorites.query.filter_by(id_user=id_user, planet_id=planet_id)
+   db.session.delete(favorite_planet)
+   db.session.commit()
+   return jsonify(favorite_planet.to_dict()), 200
+
+
+@app.route('/users/<int:id_user>/favorite/people/<int:id_people>', methods=['DELETE'])   
+def delete_favorite_people(id_people):       
+   id_user = request.json.get("id_user")
+   favorite_people = Favorites.query.filter_by(id_user=id_user, id_people=id_people)
+   db.session.delete(favorite_people)
+   db.session.commit()
+   return jsonify(favorite_people.to_dict()), 200
+
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

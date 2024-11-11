@@ -80,7 +80,7 @@ class People(db.Model):
     mass = Column(Integer, nullable=False)
 
     def __repr__(self):
-        return '<Character %r>' % self.name
+        return '<People %r>' % self.id
 
     def to_dict(self):
         return {
