@@ -71,8 +71,8 @@ class Planet(db.Model):
             "climate": self.climate
         }
 
-class Character(db.Model):
-    __tablename__ = 'character'
+class People(db.Model):
+    __tablename__ = 'people'
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     height = Column(Float, nullable=False)
@@ -97,7 +97,7 @@ class Favorites(db.Model):
     id = Column(Integer, primary_key=True)
     id_planet = Column(Integer, ForeignKey(Planet.id), nullable=True)
     id_user = Column(Integer, ForeignKey(User.id), nullable=False)
-    id_character = Column(Integer, ForeignKey(Character.id), nullable=True)
+    id_people = Column(Integer, ForeignKey(People.id), nullable=True)
 
     def __repr__(self):
         return '<Favorites %r>' % self.id
